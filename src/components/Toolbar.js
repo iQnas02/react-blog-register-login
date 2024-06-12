@@ -6,8 +6,10 @@ const Toolbar = ({ logged }) => {
 
     useEffect(() => {
         const updateFavoritesCount = () => {
-            const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-            setFavoritesCount(favorites.length);
+            if (logged) {
+                const favorites = JSON.parse(localStorage.getItem(`favorites_${logged}`)) || [];
+                setFavoritesCount(favorites.length);
+            }
         };
 
         // Initial count
@@ -19,7 +21,7 @@ const Toolbar = ({ logged }) => {
         return () => {
             window.removeEventListener('storage', updateFavoritesCount);
         };
-    }, []);
+    }, [logged]);
 
     return (
         <div className="mb-5">
@@ -31,7 +33,7 @@ const Toolbar = ({ logged }) => {
                     {!logged && <Link to="/register">Registration</Link>}
 
                     {logged && <Link to="/create">Create Post</Link>}
-                    <Link to="/favorites">Favorites ({favoritesCount})</Link>
+                    {logged && <Link to="/favorites">Favorites ({favoritesCount})</Link>}
                 </div>
 
                 {logged && `logged in as ${logged}`}

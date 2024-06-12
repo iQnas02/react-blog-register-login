@@ -13,9 +13,11 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
     const [isFavorite, setIsFavorite] = useState(false);
 
     useEffect(() => {
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
-        setIsFavorite(favorites.some(fav => fav.id === post.id));
-    }, [post.id]);
+        if (loggedIn) {
+            const favorites = JSON.parse(localStorage.getItem(`favorites_${loggedIn}`)) || [];
+            setIsFavorite(favorites.some(fav => fav.id === post.id));
+        }
+    }, [post.id, loggedIn]);
 
     function openSinglePost() {
         nav(`/post/${post.username}/${post.id}`);
@@ -61,13 +63,14 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
             return;
         }
 
-        const favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+        const favoritesKey = `favorites_${loggedIn}`;
+        const favorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
         if (isFavorite) {
             const newFavorites = favorites.filter(fav => fav.id !== post.id);
-            localStorage.setItem('favorites', JSON.stringify(newFavorites));
+            localStorage.setItem(favoritesKey, JSON.stringify(newFavorites));
         } else {
             favorites.push(post);
-            localStorage.setItem('favorites', JSON.stringify(favorites));
+            localStorage.setItem(favoritesKey, JSON.stringify(favorites));
         }
         setIsFavorite(!isFavorite);
 
@@ -84,9 +87,11 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
             {loggedIn === post.username && <button onClick={remove}>DELETE POST</button>}
             {loggedIn === post.username && <button onClick={() => setUpdateOn(!updateOn)}>UPDATE POST</button>}
 
-            <button onClick={toggleFavorite}>
-                {isFavorite ? '★' : '☆'} Favorite
-            </button>
+            {loggedIn && (
+                <button onClick={toggleFavorite}>
+                    {isFavorite ? '★' : '☆'} Favorite
+                </button>
+            )}
 
             {updateOn &&
                 <div className="d-flex flex-column p-5">
