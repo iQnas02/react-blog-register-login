@@ -10,6 +10,12 @@ const Toolbar = ({logged}) => {
 
                     {!logged && <Link to="/login">Login</Link>}
                     {!logged && <Link to="/register">Registration</Link>}
+
+                    {logged && <Link to="/create">Create Post</Link>}
+
+
+                    <Link to="/create">Favorites (35)</Link>
+
                 </div>
 
                 {logged && `logged in as ${logged}`}

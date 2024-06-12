@@ -20,7 +20,7 @@ const LoginPage = ({setLog}) => {
         const res = await http.post("/login", user)
 
         if(res.success) {
-            localStorage.setItem("secret", res.secretkey)
+            localStorage.setItem("secret", res.secretKey)
             setLog(user.name)
             nav('/')
         } else {
