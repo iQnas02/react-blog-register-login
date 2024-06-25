@@ -9,7 +9,7 @@ const BlogPage = ({loggedIn}) => {
     function getPosts() {
         http.get("/getallposts")
             .then(res =>{
-                console.log(res)
+                // console.log(res)
                 setData(res.data.reverse())
             })
     }

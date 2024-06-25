@@ -11,7 +11,6 @@ const SinglePostPage = () => {
     useEffect(() => {
         http.get(`/getsinglepost/${username}/${id}`)
             .then(res =>{
-                console.log(res)
                 setData(res.data)
             })
     }, [])

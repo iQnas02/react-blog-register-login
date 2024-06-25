@@ -11,7 +11,6 @@ const UserPostsPage = () => {
     useEffect(() => {
         http.get("/getuserposts/"+username)
             .then(res =>{
-                console.log(res)
                 setData(res.data)
             })
     }, [])

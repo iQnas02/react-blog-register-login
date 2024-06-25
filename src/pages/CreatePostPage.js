@@ -20,7 +20,6 @@ const CreatePostPage = () => {
 
         const res = await http.post("/createpost", user)
 
-        console.log(res)
         if(res.success) {
             nav("/")
         }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 
-const Toolbar = ({ logged }) => {
+const Toolbar = ({ logged, logout }) => {
     const [favoritesCount, setFavoritesCount] = useState(0);
 
     useEffect(() => {
@@ -36,7 +36,12 @@ const Toolbar = ({ logged }) => {
                     {logged && <Link to="/favorites">Favorites ({favoritesCount})</Link>}
                 </div>
 
-                {logged && `logged in as ${logged}`}
+                {logged && (
+                    <div className="d-flex gap-3">
+                        <span>logged in as {logged}</span>
+                        <button onClick={logout}>Logout</button>
+                    </div>
+                )}
             </div>
         </div>
     );
