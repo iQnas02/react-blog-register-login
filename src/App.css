@@ -41,3 +41,24 @@ img {
   width: 400px;
   overflow: hidden;
 }
+.pagination {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+}
+
+.page-item {
+  margin: 0 5px;
+}
+
+.page-item.active .page-link {
+  background-color: #007bff;
+  color: white;
+}
+
+.page-link {
+  border: 1px solid #dee2e6;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
