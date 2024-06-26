@@ -86,8 +86,8 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
     return (
         <div className="p-2 border m-2 postCard">
             <img src={post.image} alt="" />
-            <h3 onClick={openSinglePost}>{post.title}</h3>
-            <h5 onClick={openUserPosts}>{post.username}</h5>
+            <h3 style={{ cursor: 'pointer' }} onClick={openSinglePost}>{post.title}</h3>
+            <h5 style={{ cursor: 'pointer' }} onClick={openUserPosts}>{post.username}</h5>
             <p>{formatDate(post.timestamp)}</p>
 
             {loggedIn === post.username && <button onClick={remove}>DELETE POST</button>}

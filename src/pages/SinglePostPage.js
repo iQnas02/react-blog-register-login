@@ -18,6 +18,7 @@ const SinglePostPage = () => {
     return (
         <div>
             {data && <SinglePost post={data}/>}
+
         </div>
     );
 };
