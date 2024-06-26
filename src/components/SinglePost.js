@@ -41,10 +41,20 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
     }
 
     async function update() {
+        const updatedFields = {};
+
+        if (imageRef.current.value !== post.image) {
+            updatedFields.image = imageRef.current.value;
+        }
+        if (titleRef.current.value !== post.title) {
+            updatedFields.title = titleRef.current.value;
+        }
+        if (descriptionRef.current.value !== post.description) {
+            updatedFields.description = descriptionRef.current.value;
+        }
+
         const user = {
-            image: imageRef.current.value,
-            title: titleRef.current.value,
-            description: descriptionRef.current.value,
+            ...updatedFields,
             secretKey: localStorage.getItem("secret"),
             id: post.id
         };
@@ -85,11 +95,11 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
 
     return (
         <div className="p-2 border m-2 postCard">
-            <img src={post.image} alt="" />
-            <h3 style={{ cursor: 'pointer' }} onClick={openSinglePost}>{post.title}</h3>
-            <h5 style={{ cursor: 'pointer' }} onClick={openUserPosts}>{post.username}</h5>
+            <img src={post.image} alt=""/>
+            <h3 style={{cursor: 'pointer'}} onClick={openSinglePost}>{post.title}</h3>
+            <h5 style={{cursor: 'pointer'}} onClick={openUserPosts}>{post.username}</h5>
             <p>{formatDate(post.timestamp)}</p>
-
+            <p>{post.description}</p>
             {loggedIn === post.username && <button onClick={remove}>DELETE POST</button>}
             {loggedIn === post.username && <button onClick={() => setUpdateOn(!updateOn)}>UPDATE POST</button>}
 
@@ -101,9 +111,9 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
 
             {updateOn &&
                 <div className="d-flex flex-column p-5">
-                    <input type="text" ref={imageRef} placeholder="image" />
-                    <input type="text" ref={titleRef} placeholder="title" />
-                    <input type="text" ref={descriptionRef} placeholder="description" />
+                    <input type="text" ref={imageRef} placeholder="image"/>
+                    <input type="text" ref={titleRef} placeholder="title"/>
+                    <textarea ref={descriptionRef} defaultValue={post.description} placeholder="description" />
                     <button onClick={update}>Update Post</button>
                 </div>
             }

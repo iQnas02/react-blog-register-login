@@ -17,7 +17,9 @@ const SinglePostPage = ({loggedIn}) => {
 
     return (
         <div>
-            {data && <SinglePost post={data} loggedIn={loggedIn} getPosts={() => {}} />}
+            {data && <SinglePost post={data} loggedIn={loggedIn} getPosts={() => {
+            }}/>}
+
 
         </div>
     );
