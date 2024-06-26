@@ -78,11 +78,17 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
         window.dispatchEvent(new Event('storage'));
     }
 
+    const formatDate = (timestamp) => {
+        const date = new Date(timestamp);
+        return date.toLocaleString('lt-LT', { timeZone: 'Europe/Vilnius' });
+    };
+
     return (
         <div className="p-2 border m-2 postCard">
             <img src={post.image} alt="" />
             <h3 onClick={openSinglePost}>{post.title}</h3>
             <h5 onClick={openUserPosts}>{post.username}</h5>
+            <p>{formatDate(post.timestamp)}</p>
 
             {loggedIn === post.username && <button onClick={remove}>DELETE POST</button>}
             {loggedIn === post.username && <button onClick={() => setUpdateOn(!updateOn)}>UPDATE POST</button>}
