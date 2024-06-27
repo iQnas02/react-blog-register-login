@@ -1,14 +1,13 @@
+
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import http from "../plugins/http";
 
 const SinglePost = ({ post, loggedIn, getPosts }) => {
     const nav = useNavigate();
-
     const imageRef = useRef();
     const titleRef = useRef();
     const descriptionRef = useRef();
-
     const [updateOn, setUpdateOn] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
 
@@ -19,13 +18,7 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
         }
     }, [post.id, loggedIn]);
 
-    function openSinglePost() {
-        nav(`/post/${post.username}/${post.id}`);
-    }
 
-    function openUserPosts() {
-        nav(`/userposts/${post.username}`);
-    }
 
     async function remove() {
         const user = {
@@ -33,41 +26,41 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
             secretKey: localStorage.getItem("secret")
         };
 
-        const res = await http.post("/deletepost", user);
-
-        if (res.success) {
-            getPosts();
+        try {
+            const res = await http.post("/deletepost", user);
+            if (res && res.success) {
+                getPosts();
+            } else {
+                console.error("Error deleting post:", res ? res.error : "No response from server");
+            }
+        } catch (error) {
+            console.error("Network error:", error.message);
         }
     }
 
     async function update() {
-        const updatedFields = {};
-
-        if (imageRef.current.value !== post.image) {
-            updatedFields.image = imageRef.current.value;
-        }
-        if (titleRef.current.value !== post.title) {
-            updatedFields.title = titleRef.current.value;
-        }
-        if (descriptionRef.current.value !== post.description) {
-            updatedFields.description = descriptionRef.current.value;
-        }
-
         const user = {
-            ...updatedFields,
+            image: imageRef.current.value,
+            title: titleRef.current.value,
+            description: descriptionRef.current.value,
             secretKey: localStorage.getItem("secret"),
             id: post.id
         };
 
-        const res = await http.post("/updatepost", user);
-
-        if (res.success) {
-            setUpdateOn(false);
-            getPosts();
+        try {
+            const res = await http.post("/updatepost", user);
+            if (res && res.success) {
+                setUpdateOn(false);
+                getPosts();
+            } else {
+                console.error("Error updating post:", res ? res.error : "No response from server");
+            }
+        } catch (error) {
+            console.error("Network error:", error.message);
         }
     }
 
-    function toggleFavorite() {
+    const toggleFavorite = () => {
         if (!loggedIn) {
             alert("You need to be logged in to favorite posts.");
             return;
@@ -86,7 +79,7 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
 
         // Dispatch a custom event to update the toolbar
         window.dispatchEvent(new Event('storage'));
-    }
+    };
 
     const formatDate = (timestamp) => {
         const date = new Date(timestamp);
@@ -95,9 +88,9 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
 
     return (
         <div className="p-2 border m-2 postCard">
-            <img src={post.image} alt=""/>
-            <h3 style={{cursor: 'pointer'}} onClick={openSinglePost}>{post.title}</h3>
-            <h5 style={{cursor: 'pointer'}} onClick={openUserPosts}>{post.username}</h5>
+            <img src={post.image} alt="" />
+            <h3 style={{ cursor: 'pointer' }} onClick={() => nav(`/post/${post.username}/${post.id}`)}>{post.title}</h3>
+            <h5 style={{ cursor: 'pointer' }} onClick={() => nav(`/userposts/${post.username}`)}>{post.username}</h5>
             <p>{formatDate(post.timestamp)}</p>
             <p>{post.description}</p>
             {loggedIn === post.username && <button onClick={remove}>DELETE POST</button>}
@@ -109,14 +102,14 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
                 </button>
             )}
 
-            {updateOn &&
+            {updateOn && (
                 <div className="d-flex flex-column p-5">
-                    <input type="text" ref={imageRef} placeholder="image"/>
-                    <input type="text" ref={titleRef} placeholder="title"/>
+                    <input type="text" ref={imageRef} defaultValue={post.image} placeholder="image" />
+                    <input type="text" ref={titleRef} defaultValue={post.title} placeholder="title" />
                     <textarea ref={descriptionRef} defaultValue={post.description} placeholder="description" />
                     <button onClick={update}>Update Post</button>
                 </div>
-            }
+            )}
         </div>
     );
 };

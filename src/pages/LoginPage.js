@@ -1,8 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, {useRef, useState} from 'react';
 import http from "../plugins/http";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
-const LoginPage = ({ setLog }) => {
+const LoginPage = ({setLog}) => {
     const nameRef = useRef();
     const passRef = useRef();
     const nav = useNavigate();
@@ -32,36 +32,38 @@ const LoginPage = ({ setLog }) => {
     };
 
     return (
-        <div>
-            <input className="mb-3"
-                ref={nameRef}
-                type="text"
-                placeholder="username"
-                autoComplete="username"
-            />
-            <div style={{ position: 'relative' }}>
-                <input
-                    ref={passRef}
-                    type={passwordVisible ? "text" : "password"}
-                    placeholder="password"
-                    autoComplete="current-password"
+        <form onSubmit={login}>
+            <div>
+                <input className="mb-3"
+                       ref={nameRef}
+                       type="text"
+                       placeholder="username"
+                       autoComplete="username"
                 />
-                <button
-                    type="button"
-                    onClick={handlePasswordVisibility}
-                    style={{
+                <div style={{position: 'relative'}}>
+                    <input
+                        ref={passRef}
+                        type={passwordVisible ? "text" : "password"}
+                        placeholder="password"
+                        autoComplete="current-password"
+                    />
+                    <button
+                        type="button"
+                        onClick={handlePasswordVisibility}
+                        style={{
 
-                        background: 'transparent',
-                        border: 'none',
-                        cursor: 'pointer'
-                    }}
-                >
-                    {passwordVisible ? 'Hide' : 'Show'}
-                </button>
+                            background: 'transparent',
+                            border: 'none',
+                            cursor: 'pointer'
+                        }}
+                    >
+                        {passwordVisible ? 'Hide' : 'Show'}
+                    </button>
+                </div>
+                <p>{error}</p>
+                <button onClick={login}>Login</button>
             </div>
-            <p>{error}</p>
-            <button onClick={login}>Login</button>
-        </div>
+        </form>
     );
 };
 
