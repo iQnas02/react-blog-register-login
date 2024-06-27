@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import http from "../plugins/http";
 
-const SinglePost = ({ post, loggedIn, getPosts }) => {
+const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton  }) => {
     const nav = useNavigate();
     const imageRef = useRef();
     const titleRef = useRef();
@@ -107,7 +107,7 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
             <h5 style={{ cursor: 'pointer' }} onClick={() => nav(`/userposts/${post.username}`)}>{post.username}</h5>
             <p>{formatDate(post.timestamp)}</p>
             <p>{post.description}</p>
-            {loggedIn === post.username && <button onClick={remove}>DELETE POST</button>}
+            {loggedIn === post.username && !hideDeleteButton && <button onClick={remove}>DELETE POST</button>}
             {loggedIn === post.username && <button onClick={() => setUpdateOn(!updateOn)}>UPDATE POST</button>}
 
             {loggedIn && (
