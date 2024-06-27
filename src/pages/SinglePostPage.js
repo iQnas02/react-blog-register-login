@@ -17,7 +17,7 @@ const SinglePostPage = ({loggedIn}) => {
 
     return (
         <div>
-            {data && <SinglePost post={data} loggedIn={loggedIn} getPosts={() => {}} hideDeleteButton={true} />}
+            {data && <SinglePost post={data} loggedIn={loggedIn} getPosts={() => {}} hideDeleteButton={true} hideDetails={true} className="singlePostPage"/>}
 
 
 

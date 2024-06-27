@@ -38,7 +38,7 @@ img {
 }
 
 .postCard {
-  width: 400px;
+  width: 600px;
   overflow: hidden;
 }
 .pagination {
@@ -61,4 +61,10 @@ img {
   border: 1px solid #dee2e6;
   padding: 0.5rem 0.75rem;
   cursor: pointer;
+}
+.singlePostPage .postImage {
+  width: 300px;
+  height: 500px;
+  float: left;
+  background-size: cover;
 }

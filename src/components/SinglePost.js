@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import http from "../plugins/http";
 
-const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton  }) => {
+const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton, className, hideDetails }) => {
     const nav = useNavigate();
     const imageRef = useRef();
     const titleRef = useRef();
@@ -101,12 +101,16 @@ const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton  }) => {
     };
 
     return (
-        <div className="p-2 border m-2 postCard">
-            <img src={post.image} alt="" />
-            <h3 style={{ cursor: 'pointer' }} onClick={() => nav(`/post/${post.username}/${post.id}`)}>{post.title}</h3>
-            <h5 style={{ cursor: 'pointer' }} onClick={() => nav(`/userposts/${post.username}`)}>{post.username}</h5>
-            <p>{formatDate(post.timestamp)}</p>
-            <p>{post.description}</p>
+        <div className={`p-2 border m-2 postCard ${className}`}>
+            <img src={post.image} alt="" className="postImage"/>
+            <h3 style={{cursor: 'pointer'}} onClick={() => nav(`/post/${post.username}/${post.id}`)}>{post.title}</h3>
+            <h5 style={{cursor: 'pointer'}} onClick={() => nav(`/userposts/${post.username}`)}>{post.username}</h5>
+            {hideDetails && (
+                <>
+                    <p>{formatDate(post.timestamp)}</p>
+                    <p>{post.description}</p>
+                </>
+            )}
             {loggedIn === post.username && !hideDeleteButton && <button onClick={remove}>DELETE POST</button>}
             {loggedIn === post.username && <button onClick={() => setUpdateOn(!updateOn)}>UPDATE POST</button>}
 
@@ -118,9 +122,9 @@ const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton  }) => {
 
             {updateOn && (
                 <div className="d-flex flex-column p-5">
-                    <input type="text" ref={imageRef} defaultValue={post.image} placeholder="image" />
-                    <input type="text" ref={titleRef} defaultValue={post.title} placeholder="title" />
-                    <textarea ref={descriptionRef} defaultValue={post.description} placeholder="description" />
+                    <input type="text" ref={imageRef} defaultValue={post.image} placeholder="image"/>
+                    <input type="text" ref={titleRef} defaultValue={post.title} placeholder="title"/>
+                    <textarea ref={descriptionRef} defaultValue={post.description} placeholder="description"/>
                     <button onClick={update}>Update Post</button>
                 </div>
             )}
