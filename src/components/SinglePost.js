@@ -29,6 +29,13 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
         try {
             const res = await http.post("/deletepost", user);
             if (res && res.success) {
+                const favoritesKey = `favorites_${loggedIn}`;
+                const favorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+                const newFavorites = favorites.filter(fav => fav.id !== post.id);
+                localStorage.setItem(favoritesKey, JSON.stringify(newFavorites));
+
+                // Dispatch a custom event to update the favorites page
+                window.dispatchEvent(new Event('storage'));
                 getPosts();
             } else {
                 console.error("Error deleting post:", res ? res.error : "No response from server");
@@ -50,6 +57,13 @@ const SinglePost = ({ post, loggedIn, getPosts }) => {
         try {
             const res = await http.post("/updatepost", user);
             if (res && res.success) {
+                const favoritesKey = `favorites_${loggedIn}`;
+                const favorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+                const updatedFavorites = favorites.map(fav => fav.id === post.id ? { ...fav } : fav);
+                localStorage.setItem(favoritesKey, JSON.stringify(updatedFavorites));
+
+                // Dispatch a custom event to update the favorites page
+                window.dispatchEvent(new Event('storage'));
                 setUpdateOn(false);
                 getPosts();
             } else {

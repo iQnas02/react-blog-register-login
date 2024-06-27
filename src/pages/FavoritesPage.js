@@ -23,7 +23,7 @@ const FavoritesPage = ({ loggedIn }) => {
                 window.removeEventListener('storage', updateFavorites);
             };
         } else {
-            nav('/login');
+            nav('/favorites');
         }
     }, [loggedIn, nav]);
 
@@ -32,13 +32,39 @@ const FavoritesPage = ({ loggedIn }) => {
         setFavorites(storedFavorites);
     }
 
+    // Update favorites list if a post is updated or deleted
+    const handlePostUpdate = (updatedPost) => {
+        const favoritesKey = `favorites_${loggedIn}`;
+        const storedFavorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+        const updatedFavorites = storedFavorites.map(fav => fav.id === updatedPost.id ? { ...fav, ...updatedPost } : fav);
+        localStorage.setItem(favoritesKey, JSON.stringify(updatedFavorites));
+        setFavorites(updatedFavorites);
+    };
+
+    const handlePostDelete = (postId) => {
+        const favoritesKey = `favorites_${loggedIn}`;
+        const storedFavorites = JSON.parse(localStorage.getItem(favoritesKey)) || [];
+        const updatedFavorites = storedFavorites.filter(fav => fav.id !== postId);
+        localStorage.setItem(favoritesKey, JSON.stringify(updatedFavorites));
+        setFavorites(updatedFavorites);
+    };
+
     if (!loggedIn) {
         return <div>Please log in to see your favorites.</div>;
     }
 
     return (
         <div className="d-flex flex-wrap">
-            {favorites.map(x => <SinglePost getPosts={getPosts} loggedIn={loggedIn} key={x.id} post={x} />)}
+            {favorites.map(post => (
+                <SinglePost
+                    key={post.id}
+                    post={post}
+                    loggedIn={loggedIn}
+                    getPosts={getPosts}
+                    onPostUpdate={handlePostUpdate}
+                    onPostDelete={handlePostDelete}
+                />
+            ))}
         </div>
     );
 };
