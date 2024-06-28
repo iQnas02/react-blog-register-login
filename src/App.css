@@ -39,7 +39,7 @@ img {
 
 .postCard {
   width: 600px;
-  overflow: hidden;
+  overflow: auto;
 }
 .pagination {
   display: flex;
