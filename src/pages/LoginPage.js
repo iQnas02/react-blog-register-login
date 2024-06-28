@@ -76,7 +76,6 @@ const LoginPage = ({ setLog }) => {
                         onClick={handlePasswordVisibility}
                         style={{
                             position: 'absolute',
-                            right: 0,
                             background: 'transparent',
                             border: 'none',
                             cursor: 'pointer'
