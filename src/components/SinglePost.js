@@ -9,6 +9,7 @@ const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton, className, hid
     const descriptionRef = useRef();
     const [updateOn, setUpdateOn] = useState(false);
     const [isFavorite, setIsFavorite] = useState(false);
+    const [errors, setErrors] = useState({ image: '', title: '', description: '', general: '' });
 
     useEffect(() => {
         if (loggedIn) {
@@ -17,7 +18,28 @@ const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton, className, hid
         }
     }, [post.id, loggedIn]);
 
+    const validateFields = (image, title, description) => {
+        let hasError = false;
+        const newErrors = { image: '', title: '', description: '', general: '' };
 
+        if (image === '') {
+            newErrors.image = 'Image URL is required.';
+            hasError = true;
+        }
+
+        if (title === '') {
+            newErrors.title = 'Title is required.';
+            hasError = true;
+        }
+
+        if (description === '') {
+            newErrors.description = 'Description is required.';
+            hasError = true;
+        }
+
+        setErrors(newErrors);
+        return !hasError;
+    };
 
     async function remove() {
         const user = {
@@ -45,10 +67,18 @@ const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton, className, hid
     }
 
     async function update() {
+        setErrors({ image: '', title: '', description: '', general: '' });
+
+        const image = imageRef.current.value.trim();
+        const title = titleRef.current.value.trim();
+        const description = descriptionRef.current.value.trim();
+
+        if (!validateFields(image, title, description)) return;
+
         const user = {
-            image: imageRef.current.value,
-            title: titleRef.current.value,
-            description: descriptionRef.current.value,
+            image,
+            title,
+            description,
             secretKey: localStorage.getItem("secret"),
             id: post.id
         };
@@ -66,9 +96,11 @@ const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton, className, hid
                 setUpdateOn(false);
                 getPosts();
             } else {
+                setErrors(prev => ({ ...prev, general: res ? res.error : "No response from server" }));
                 console.error("Error updating post:", res ? res.error : "No response from server");
             }
         } catch (error) {
+            setErrors(prev => ({ ...prev, general: 'An unexpected error occurred. Please try again later.' }));
             console.error("Network error:", error.message);
         }
     }
@@ -122,8 +154,15 @@ const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton, className, hid
             {updateOn && (
                 <div className="d-flex flex-column p-5">
                     <input type="text" ref={imageRef} defaultValue={post.image} placeholder="image"/>
+                    {errors.image && <p style={{color: 'red'}}>{errors.image}</p>}
+
                     <input type="text" ref={titleRef} defaultValue={post.title} placeholder="title"/>
+                    {errors.title && <p style={{color: 'red'}}>{errors.title}</p>}
+
                     <textarea ref={descriptionRef} defaultValue={post.description} placeholder="description"/>
+                    {errors.description && <p style={{color: 'red'}}>{errors.description}</p>}
+                    <p>{errors.general}</p>
+
                     <button onClick={update}>Update Post</button>
                 </div>
             )}
