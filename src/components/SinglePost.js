@@ -22,8 +22,13 @@ const SinglePost = ({ post, loggedIn, getPosts, hideDeleteButton, className, hid
         let hasError = false;
         const newErrors = { image: '', title: '', description: '', general: '' };
 
+        const urlPattern = /^(https?:\/\/)/i;
+
         if (image === '') {
             newErrors.image = 'Image URL is required.';
+            hasError = true;
+        }else if (!urlPattern.test(image)) {
+            newErrors.image = 'Image URL must start with http:// or https://.';
             hasError = true;
         }
 
